@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_01_17_033412) do
+ActiveRecord::Schema.define(version: 2020_01_17_153947) do
 
   create_table "devices", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "section"
@@ -18,6 +18,20 @@ ActiveRecord::Schema.define(version: 2020_01_17_033412) do
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.string "image"
+  end
+
+  create_table "events", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.string "hardware_serial"
+    t.json "payload_fields"
+    t.virtual "eid", type: :string, as: "json_unquote(json_extract(`payload_fields`,_utf8mb4\\'$.eid\\'))", stored: true
+    t.virtual "level", type: :integer, as: "json_unquote(json_extract(`payload_fields`,_utf8mb4\\'$.level\\'))", stored: true
+    t.json "metadata"
+    t.virtual "time", type: :string, as: "json_unquote(json_extract(`metadata`,_utf8mb4\\'$.time\\'))", stored: true
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["eid"], name: "index_events_on_eid"
+    t.index ["hardware_serial"], name: "index_events_on_hardware_serial"
+    t.index ["time"], name: "index_events_on_time"
   end
 
   create_table "users", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci", force: :cascade do |t|
