@@ -2,6 +2,7 @@ Rails.application.routes.draw do
   get 'insights/get'
   get 'insights/users'
   get 'insights/devices'
+  get 'insights/level'
   resources :events
   resources :devices
   resources :users

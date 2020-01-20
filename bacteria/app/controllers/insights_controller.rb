@@ -15,4 +15,21 @@ class InsightsController < ApplicationController
     records_array = ActiveRecord::Base.connection.execute(sql)
     render json: records_array.to_json
   end
+  def level
+
+    sql = "select `level`,hardware_serial from bacteria_development.events a where a.`time` in
+    (select  max(`time`)
+    from bacteria_development.events a
+    where (eid is not NULL)and (`level` is not NULL)and (metadata is not NULL) 
+    group by a.`hardware_serial`)   "
+      records_array = ActiveRecord::Base.connection.execute(sql)
+      render json: records_array.to_json
+    end
+    
+
+
+  def byhardware
+      @events = Event.find(params[:hardware_serial])
+      render json: @events
+    end
 end
